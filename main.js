@@ -17,7 +17,6 @@ function changeImage() {
     index = 0
   } else if (index == -1) {
     index = img.length - 1
-    console.log('rwadA')
   }
 
   imgs.style.transform = `translateX(${-index * 500}px)`
