@@ -1,40 +1,44 @@
-const imgs = document.getElementById('imgs')
-const leftBtn = document.getElementById('left')
-const rightBtn = document.getElementById('right')
-const img = document.querySelectorAll('#imgs img')
+const Carousel = {
+  img: document.querySelectorAll('#imgs img'),
+  imgs: document.getElementById('imgs'),
+  leftBtn: document.getElementById('left'),
+  rightBtn: document.getElementById('right'),
 
-let index = 0
+  index: 0,
+  interval: '',
+  intervalTime: 2000,
 
-let interval = setInterval(run, 2000)
+  run() {
+    Carousel.index++
+    Carousel.changeImage()
+  },
 
-function run() {
-  index++
-  changeImage()
-}
+  slide(direction) {
+    direction ? Carousel.index++ : Carousel.index--
+    Carousel.changeImage()
+    Carousel.resetInterval()
+  },
 
-function changeImage() {
-  if (index > img.length - 1) {
-    index = 0
-  } else if (index == -1) {
-    index = img.length - 1
+  resetInterval() {
+    clearInterval(Carousel.interval)
+    Carousel.interval = setInterval(Carousel.run, 2000)
+  },
+
+  changeImage() {
+    if (Carousel.index > Carousel.img.length - 1) {
+      Carousel.index = 0
+    } else if (Carousel.index < 0) {
+      Carousel.index = Carousel.img.length - 1
+    }
+  
+    Carousel.imgs.style.transform = `translateX(${-Carousel.index * 500}px)`
+  },
+
+  start() {
+    Carousel.interval = setInterval(Carousel.run, Carousel.intervalTime)
+    Carousel.leftBtn.addEventListener('click', () => Carousel.slide(false))
+    Carousel.rightBtn.addEventListener('click', () => Carousel.slide(true))
   }
-
-  imgs.style.transform = `translateX(${-index * 500}px)`
 }
 
-function resetInterval() {
-  clearInterval(interval)
-  interval = setInterval(run, 2000)
-}
-
-leftBtn.addEventListener('click', () => {
-  index--
-  changeImage()
-  resetInterval()
-})
-
-rightBtn.addEventListener('click', () => {
-  index++
-  changeImage()
-  resetInterval()
-})
+Carousel.start()
